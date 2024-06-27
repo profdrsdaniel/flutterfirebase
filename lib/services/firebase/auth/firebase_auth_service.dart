@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projetoflutterapi/models/user_model.dart';
+import 'package:projetoflutterapi/utils/results.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -11,15 +14,33 @@ class FirebaseAuthService {
     });
   }
 
+  final StreamController<Results> _resultsLogin =
+      StreamController<Results>.broadcast();
+
+  Stream<Results> get resultsLogin => _resultsLogin.stream;
+
   signIn(String email, String password) async {
+    _resultsLogin.add(LoadingResult());
+
     try {
-      _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      _resultsLogin.add(SuccessResult());
+    } on FirebaseAuthException catch (exception, e) {
+      _resultsLogin.add(ErrorResult(code: exception.code));
+      debugPrint(e.toString());
+    }
+  }
+
+  register(String email, String password) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
   signOut() async {
-    _auth.signOut();
+    await _auth.signOut();
   }
 }
