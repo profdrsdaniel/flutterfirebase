@@ -4,12 +4,28 @@ import 'package:projetoflutterapi/screen/register_screen.dart';
 import 'package:projetoflutterapi/services/firebase/auth/firebase_auth_service.dart';
 import 'package:projetoflutterapi/utils/results.dart';
 
-class LoginPage extends StatelessWidget {
-  final FirebaseAuthService _auth = FirebaseAuthService();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class LoginPage extends StatefulWidget {
 
   LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool enableVisibility = false;
+
+  changeVisibility() {
+    setState(() {
+      enableVisibility = !enableVisibility;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +64,18 @@ class LoginPage extends StatelessWidget {
                 ),
                 TextField(
                   controller: _passwordController,
-                  decoration: InputDecoration(labelText: 'Password'),
+                  obscureText: enableVisibility,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        changeVisibility();
+                      },
+                      icon: enableVisibility
+                          ? Icon(Icons.visibility_off)
+                          : Icon(Icons.visibility),
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
