@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projetoflutterapi/screen/login_screen.dart';
 import 'package:projetoflutterapi/services/firebase/auth/firebase_auth_service.dart';
 
 import '../models/character.dart';
@@ -28,9 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Home"),
         backgroundColor: Colors.blue,
-        actions: [IconButton(onPressed: () {
-          _auth.signOut();
-        }, icon: Icon(Icons.logout))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                _auth.signOut();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+              icon: Icon(Icons.logout))
+        ],
       ),
       body: Column(
         children: [

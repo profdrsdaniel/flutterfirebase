@@ -46,8 +46,6 @@ class InitializeApp extends StatelessWidget {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        } else if (snapshot.hasData && snapshot.data!.email.isNotEmpty) {
-          return const HomeScreen();
         }
 
         return LoginPage();
